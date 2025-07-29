@@ -14,7 +14,9 @@ import com.yudha.pokemonapp.data.repository.AuthRepository
 import com.yudha.pokemonapp.ui.auth.LoginActivity
 import com.yudha.pokemonapp.ui.home.HomeFragment
 import com.yudha.pokemonapp.ui.profile.ProfileFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     
     private lateinit var authRepository: AuthRepository

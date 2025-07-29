@@ -1,18 +1,20 @@
 package com.yudha.pokemonapp.ui.home
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yudha.pokemonapp.data.model.PokemonResult
 import com.yudha.pokemonapp.data.repository.PokemonRepository
 import com.yudha.pokemonapp.util.Result
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeViewModel(application: Application) : AndroidViewModel(application) {
-    
-    private val pokemonRepository = PokemonRepository(application)
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val pokemonRepository: PokemonRepository
+) : ViewModel() {
     
     private val _pokemonList = MutableLiveData<List<PokemonResult>>()
     val pokemonList: LiveData<List<PokemonResult>> = _pokemonList

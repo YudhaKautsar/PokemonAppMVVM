@@ -13,4 +13,10 @@
     <color name="design_default_color_primary">#2196F3</color>
     <color name="design_default_color_primary_dark">#1976D2</color>
     <color name="design_default_color_primary_more_dark">#2236FF</color>
+    
+    <!-- App theme colors -->
+    <color name="primary_color">#1976D2</color>
+    <color name="background_color">#F5F5F5</color>
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
 </resources>

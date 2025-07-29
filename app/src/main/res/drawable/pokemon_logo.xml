@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+    
+    <!-- Pokeball Shadow -->
+    <path
+        android:fillColor="#80000000"
+        android:pathData="M100,25 A75,75 0 1,1 100,175 A75,75 0 1,1 100,25 Z" />
+    
+    <!-- Pokeball Background Circle -->
+    <path
+        android:fillColor="#E53935"
+        android:pathData="M100,20 A80,80 0 0,1 100,100 L20,100 A80,80 0 0,1 100,20 Z" />
+    
+    <!-- Pokeball Top Highlight -->
+    <path
+        android:fillColor="#FF5722"
+        android:pathData="M100,20 A80,80 0 0,1 160,60 A80,80 0 0,0 100,20 Z" />
+    
+    <!-- Pokeball Bottom Half -->
+    <path
+        android:fillColor="#FAFAFA"
+        android:pathData="M100,100 A80,80 0 0,1 100,180 A80,80 0 0,1 20,100 Z" />
+    
+    <!-- Pokeball Bottom Shadow -->
+    <path
+        android:fillColor="#E0E0E0"
+        android:pathData="M100,100 A80,80 0 0,1 140,140 A80,80 0 0,0 100,100 Z" />
+    
+    <!-- Pokeball Center Line -->
+    <path
+        android:fillColor="#424242"
+        android:pathData="M20,95 L180,95 L180,105 L20,105 Z" />
+    
+    <!-- Pokeball Center Circle Outer -->
+    <path
+        android:fillColor="#424242"
+        android:pathData="M100,82 A18,18 0 1,1 100,118 A18,18 0 1,1 100,82 Z" />
+    
+    <!-- Pokeball Center Circle -->
+    <path
+        android:fillColor="#FAFAFA"
+        android:pathData="M100,85 A15,15 0 1,1 100,115 A15,15 0 1,1 100,85 Z" />
+    
+    <!-- Pokeball Center Inner Circle -->
+    <path
+        android:fillColor="#E0E0E0"
+        android:pathData="M100,92 A8,8 0 1,1 100,108 A8,8 0 1,1 100,92 Z" />
+    
+    <!-- Pokeball Center Shine -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M95,95 A5,5 0 1,1 105,105 A5,5 0 1,1 95,95 Z" />
+    
+</vector>

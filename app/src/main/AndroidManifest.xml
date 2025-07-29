@@ -12,7 +12,7 @@
 
 
     <application
-        android:name=".PokemonApp"
+        android:name=".PokemonApplication"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -26,6 +26,7 @@
             android:name=".ui.splash.SplashActivity"
             android:exported="true"
             android:screenOrientation="portrait"
+            android:theme="@style/Theme.PokemonApp.Splash"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -45,6 +46,12 @@
             android:name=".ui.main.MainActivity"
             android:exported="false"
             android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".ui.detail.PokemonDetailActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".ui.main.MainActivity">
         </activity>
         
         <provider

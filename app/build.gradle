@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
 
 android {
     compileSdk 30
@@ -94,4 +95,8 @@ dependencies {
 
     // Security Crypto for password hashing
     implementation 'androidx.security:security-crypto:1.1.0-alpha03'
+    
+    // Dagger Hilt
+    implementation 'com.google.dagger:hilt-android:2.38.1'
+    kapt 'com.google.dagger:hilt-compiler:2.38.1'
 }

@@ -1,3 +1,103 @@
 <resources>
     <string name="app_name">PokemonApp</string>
+    <string name="pokemon_image">Pokemon Image</string>
+    <string name="types">Types</string>
+    <string name="abilities">Abilities</string>
+    <string name="stats">Stats</string>
+    <string name="height">Height</string>
+    <string name="weight">Weight</string>
+    <string name="base_experience">Base Exp</string>
+    
+    <!-- Auth Strings -->
+    <string name="welcome_back">Selamat datang kembali!</string>
+    <string name="login">Masuk</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="no_account">Belum punya akun? </string>
+    <string name="register_here">Daftar di sini</string>
+    <string name="register">Daftar</string>
+    <string name="email">Email</string>
+    <string name="confirm_password">Konfirmasi Password</string>
+    <string name="already_have_account">Sudah punya akun? </string>
+    <string name="login_here">Masuk di sini</string>
+    
+    <!-- Validation Messages -->
+    <string name="username_empty">Username tidak boleh kosong</string>
+    <string name="password_empty">Password tidak boleh kosong</string>
+    <string name="password_min_length">Password minimal 6 karakter</string>
+    <string name="username_min_length">Username minimal 3 karakter</string>
+    <string name="email_empty">Email tidak boleh kosong</string>
+    <string name="email_invalid">Format email tidak valid</string>
+    <string name="password_mismatch">Konfirmasi password tidak cocok</string>
+    <string name="username_taken">Username sudah digunakan</string>
+    <string name="email_taken">Email sudah digunakan</string>
+    <string name="login_failed">Username atau password salah</string>
+    
+    <!-- Success Messages -->
+    <string name="login_success">Login berhasil! Selamat datang %s</string>
+    <string name="register_success">Registrasi berhasil! Silakan login dengan akun Anda</string>
+    <string name="profile_updated">Profile updated successfully</string>
+    
+    <!-- Error Messages -->
+    <string name="login_error">Login gagal</string>
+    <string name="register_error">Registrasi gagal</string>
+    <string name="user_not_found">User not found</string>
+    <string name="failed_load_profile">Failed to load profile: %s</string>
+    <string name="failed_update_profile">Failed to update profile: %s</string>
+    <string name="failed_load_pokemon">Failed to load Pokemon detail: %s</string>
+    <string name="unknown_error">Unknown error occurred</string>
+    <string name="empty_response">Empty response</string>
+    <string name="error_format">Error: %d %s</string>
+    <string name="invalid_pokemon_data">Invalid Pokemon data</string>
+    <string name="permissions_required">Permissions required for camera and gallery access</string>
+    
+    <!-- Loading Messages -->
+    <string name="loading_more_pokemon">Loading more Pokemon...</string>
+    
+    <!-- Dialog Messages -->
+    <string name="logout_title">Logout</string>
+    <string name="logout_message">Apakah Anda yakin ingin keluar?</string>
+    <string name="logout_confirm_message">Are you sure you want to logout?</string>
+    <string name="yes">Ya</string>
+    <string name="no">Tidak</string>
+    <string name="select_image_source">Select Image Source</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    
+    <!-- Pokemon Detail -->
+    <string name="pokemon_id_format">#%s</string>
+    <string name="height_format">%.1f m</string>
+    <string name="weight_format">%.1f kg</string>
+    <string name="ability_slot_format">Slot %d</string>
+    <string name="hidden_ability">Hidden Ability</string>
+    <string name="normal_ability">Normal Ability</string>
+    
+    <!-- Profile -->
+    <string name="change_photo">Change Photo</string>
+    <string name="full_name">Full Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="dash">-</string>
+    
+    <!-- Constants -->
+    <string name="pokemon_table_name">pokemon</string>
+    <string name="users_table_name">users</string>
+    <string name="auth_prefs">auth_prefs</string>
+    <string name="user_prefs">user_prefs</string>
+    <string name="pokemon_database_name">pokemon_app_database</string>
+    
+    <!-- API Endpoints -->
+    <string name="endpoint_auth_login">auth/login</string>
+    <string name="endpoint_pokemon">pokemon</string>
+    <string name="query_limit">limit</string>
+    <string name="query_offset">offset</string>
+    
+    <!-- Image URLs -->
+    <string name="pokemon_sprite_url">https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/%d.png</string>
+    <string name="pokemon_api_url">https://pokeapi.co/api/v2/pokemon/%d/</string>
+    
+    <!-- File Provider -->
+    <string name="file_provider_authority">%s.fileprovider</string>
+    <string name="temp_photo_name">temp_photo_%d.jpg</string>
+    <string name="profile_photo_name">profile_%d.jpg</string>
 </resources>

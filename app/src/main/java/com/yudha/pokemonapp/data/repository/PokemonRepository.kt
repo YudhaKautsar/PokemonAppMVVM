@@ -2,19 +2,24 @@ package com.yudha.pokemonapp.data.repository
 
 import android.content.Context
 import com.yudha.pokemonapp.data.dao.PokemonDao
-import com.yudha.pokemonapp.data.database.AppDatabase
 import com.yudha.pokemonapp.data.local.entity.PokemonEntity
 import com.yudha.pokemonapp.data.model.PokemonListResponse
 import com.yudha.pokemonapp.data.model.PokemonResult
-import com.yudha.pokemonapp.network.AppApi
+import com.yudha.pokemonapp.data.model.PokemonDetail
+import com.yudha.pokemonapp.network.PokemonApiService
 import com.yudha.pokemonapp.util.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.Response
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class PokemonRepository(context: Context) {
-    
-    private val apiService = AppApi.pokemon
-    private val pokemonDao: PokemonDao = AppDatabase.getDatabase(context).pokemonDao()
+@Singleton
+class PokemonRepository @Inject constructor(
+    private val context: Context,
+    private val apiService: PokemonApiService,
+    private val pokemonDao: PokemonDao
+) {
     
     suspend fun getPokemonList(limit: Int = 10, offset: Int = 0): Result<PokemonListResponse> {
         return withContext(Dispatchers.IO) {
@@ -137,6 +142,18 @@ class PokemonRepository(context: Context) {
             } catch (e: Exception) {
                 Result.Error(e)
             }
+        }
+    }
+    
+    suspend fun getPokemonDetail(id: Int): Response<PokemonDetail> {
+        return withContext(Dispatchers.IO) {
+            apiService.getPokemonDetail(id)
+        }
+    }
+    
+    suspend fun getPokemonDetailByName(name: String): Response<PokemonDetail> {
+        return withContext(Dispatchers.IO) {
+            apiService.getPokemonDetailByName(name)
         }
     }
 }
