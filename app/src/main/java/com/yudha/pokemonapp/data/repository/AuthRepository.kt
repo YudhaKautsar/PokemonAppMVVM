@@ -3,6 +3,7 @@ package com.yudha.pokemonapp.data.repository
 import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
+import com.yudha.pokemonapp.R
 import com.yudha.pokemonapp.data.dao.UserDao
 import com.yudha.pokemonapp.data.entity.User
 import com.yudha.pokemonapp.data.local.UserPreferences
@@ -29,12 +30,12 @@ class AuthRepository(private val userDao: UserDao, private val context: Context)
         return try {
             // Check if username already exists
             if (userDao.isUsernameExists(username) > 0) {
-                return Result.failure(Exception("Username sudah digunakan"))
+                return Result.failure(Exception(context.getString(R.string.username_taken)))
             }
             
             // Check if email already exists
             if (userDao.isEmailExists(email) > 0) {
-                return Result.failure(Exception("Email sudah digunakan"))
+                return Result.failure(Exception(context.getString(R.string.email_taken)))
             }
             
             // Hash password
@@ -67,7 +68,7 @@ class AuthRepository(private val userDao: UserDao, private val context: Context)
                 saveLoginSession(user)
                 Result.success(user)
             } else {
-                Result.failure(Exception("Username atau password salah"))
+                Result.failure(Exception(context.getString(R.string.login_failed)))
             }
         } catch (e: Exception) {
             Result.failure(e)

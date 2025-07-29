@@ -102,7 +102,7 @@ class PokemonAdapter(
                     if (it.isLowerCase()) it.titlecase() else it.toString() 
                 }
                 
-                // Extract Pokemon ID from URL for image
+                // Extract Pokemon ID from URL
                 val pokemonId = extractPokemonId(pokemon.url)
                 val imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$pokemonId.png"
                 

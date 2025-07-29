@@ -12,22 +12,22 @@ import androidx.appcompat.app.AppCompatActivity
 
 import com.yudha.pokemonapp.R
 import com.yudha.pokemonapp.data.repository.AuthRepository
-import com.yudha.pokemonapp.data.database.AppDatabase
 import com.yudha.pokemonapp.ui.main.MainActivity
 import com.yudha.pokemonapp.ui.auth.LoginActivity
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
+@AndroidEntryPoint
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
 
-    private lateinit var authRepository: AuthRepository
+    @Inject
+    lateinit var authRepository: AuthRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-        
-        val database = AppDatabase.getDatabase(this)
-        authRepository = AuthRepository(database.userDao(), this)
         
         // Start animations
         startAnimations()

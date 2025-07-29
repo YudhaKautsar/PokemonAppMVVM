@@ -5,18 +5,21 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.yudha.pokemonapp.data.entity.User
-import com.yudha.pokemonapp.data.database.AppDatabase
 import com.yudha.pokemonapp.data.local.UserPreferences
 import com.yudha.pokemonapp.data.repository.AuthRepository
+import com.yudha.pokemonapp.data.entity.User
+import com.yudha.pokemonapp.data.dao.UserDao
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ProfileViewModel(application: Application) : AndroidViewModel(application) {
-    
-    private val database = AppDatabase.getDatabase(application)
-    private val userDao = database.userDao()
-    private val userPreferences = UserPreferences(application)
-    private val authRepository = AuthRepository(userDao, application)
+@HiltViewModel
+class ProfileViewModel @Inject constructor(
+    application: Application,
+    private val userDao: UserDao,
+    private val userPreferences: UserPreferences,
+    private val authRepository: AuthRepository
+) : AndroidViewModel(application) {
     
     private val _user = MutableLiveData<User?>()
     val user: LiveData<User?> = _user

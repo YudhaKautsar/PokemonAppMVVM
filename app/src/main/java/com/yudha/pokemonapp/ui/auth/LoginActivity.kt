@@ -6,9 +6,12 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.yudha.pokemonapp.R
 import com.yudha.pokemonapp.ui.main.MainActivity
 import com.yudha.pokemonapp.databinding.ActivityLoginBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
     
     private lateinit var binding: ActivityLoginBinding
@@ -40,12 +43,16 @@ class LoginActivity : AppCompatActivity() {
     }
     
     private fun observeViewModel() {
-        authViewModel.loginResult.observe(this) { result ->
-            result.onSuccess { user ->
-                Toast.makeText(this, "Login berhasil! Selamat datang ${user.username}", Toast.LENGTH_SHORT).show()
+        authViewModel.loginResult.observe(this) { success ->
+            if (success) {
+                Toast.makeText(this, getString(R.string.login_success), Toast.LENGTH_SHORT).show()
                 navigateToMain()
-            }.onFailure { exception ->
-                Toast.makeText(this, exception.message ?: "Login gagal", Toast.LENGTH_SHORT).show()
+            }
+        }
+        
+        authViewModel.errorMessage.observe(this) { errorMessage ->
+            if (errorMessage.isNotEmpty()) {
+                Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
             }
         }
         
@@ -67,8 +74,8 @@ class LoginActivity : AppCompatActivity() {
         val validationError = authViewModel.validateLoginInput(username, password)
         if (validationError != null) {
             when {
-                validationError.contains("Username") -> binding.tilUsername.error = validationError
-                validationError.contains("Password") -> binding.tilPassword.error = validationError
+                validationError.contains(getString(R.string.username)) -> binding.tilUsername.error = validationError
+            validationError.contains(getString(R.string.password)) -> binding.tilPassword.error = validationError
                 else -> Toast.makeText(this, validationError, Toast.LENGTH_SHORT).show()
             }
             return

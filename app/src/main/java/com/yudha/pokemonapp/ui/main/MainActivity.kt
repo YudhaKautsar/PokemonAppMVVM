@@ -9,24 +9,27 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.yudha.pokemonapp.R
-import com.yudha.pokemonapp.data.database.AppDatabase
 import com.yudha.pokemonapp.data.repository.AuthRepository
 import com.yudha.pokemonapp.ui.auth.LoginActivity
 import com.yudha.pokemonapp.ui.home.HomeFragment
 import com.yudha.pokemonapp.ui.profile.ProfileFragment
+import com.yudha.pokemonapp.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     
-    private lateinit var authRepository: AuthRepository
+    private lateinit var binding: ActivityMainBinding
+    
+    @Inject
+    lateinit var authRepository: AuthRepository
     private lateinit var bottomNavigation: BottomNavigationView
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
-        val database = AppDatabase.getDatabase(this)
-        authRepository = AuthRepository(database.userDao(), this)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         
         // Check if user is logged in
         if (!authRepository.isLoggedIn()) {
@@ -86,12 +89,12 @@ class MainActivity : AppCompatActivity() {
     
     private fun showLogoutDialog() {
         AlertDialog.Builder(this)
-            .setTitle("Logout")
-            .setMessage("Apakah Anda yakin ingin keluar?")
-            .setPositiveButton("Ya") { _, _ ->
+            .setTitle(getString(R.string.logout_title))
+            .setMessage(getString(R.string.logout_message))
+            .setPositiveButton(getString(R.string.yes)) { _, _ ->
                 logout()
             }
-            .setNegativeButton("Tidak", null)
+            .setNegativeButton(getString(R.string.no), null)
             .show()
     }
     

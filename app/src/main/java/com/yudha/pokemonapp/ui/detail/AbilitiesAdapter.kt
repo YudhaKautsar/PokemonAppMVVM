@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.yudha.pokemonapp.R
 import com.yudha.pokemonapp.data.model.PokemonAbility
 import com.yudha.pokemonapp.databinding.ItemAbilityBinding
 
@@ -31,13 +32,13 @@ class AbilitiesAdapter : ListAdapter<PokemonAbility, AbilitiesAdapter.AbilityVie
         fun bind(ability: PokemonAbility) {
             binding.apply {
                 textAbilityName.text = ability.ability.name.replaceFirstChar { it.uppercase() }
-                textAbilitySlot.text = "Slot ${ability.slot}"
+                textAbilitySlot.text = binding.root.context.getString(R.string.ability_slot_format, ability.slot)
                 
                 if (ability.isHidden) {
-                    textAbilityType.text = "Hidden Ability"
+                    textAbilityType.text = binding.root.context.getString(R.string.hidden_ability)
                     cardAbility.alpha = 0.8f
                 } else {
-                    textAbilityType.text = "Normal Ability"
+                    textAbilityType.text = binding.root.context.getString(R.string.normal_ability)
                     cardAbility.alpha = 1.0f
                 }
             }

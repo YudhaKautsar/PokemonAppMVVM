@@ -16,7 +16,7 @@
         android:id="@+id/textLoadingFooter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Loading more Pokemon..."
+        android:text="@string/loading_more_pokemon"
         android:textSize="14sp"
         android:textColor="@color/gray" />
 

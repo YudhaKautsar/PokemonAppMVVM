@@ -5,37 +5,45 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.yudha.pokemonapp.data.database.AppDatabase
-import com.yudha.pokemonapp.data.entity.User
+import com.yudha.pokemonapp.R
 import com.yudha.pokemonapp.data.repository.AuthRepository
+import com.yudha.pokemonapp.data.entity.User
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AuthViewModel(application: Application) : AndroidViewModel(application) {
-    
+@HiltViewModel
+class AuthViewModel @Inject constructor(
+    application: Application,
     private val authRepository: AuthRepository
+) : AndroidViewModel(application) {
     
-    private val _loginResult = MutableLiveData<Result<User>>()
-    val loginResult: LiveData<Result<User>> = _loginResult
+    private val _loginResult = MutableLiveData<Boolean>()
+    val loginResult: LiveData<Boolean> = _loginResult
     
-    private val _registerResult = MutableLiveData<Result<User>>()
-    val registerResult: LiveData<Result<User>> = _registerResult
+    private val _registerResult = MutableLiveData<Boolean>()
+    val registerResult: LiveData<Boolean> = _registerResult
+    
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String> = _errorMessage
     
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
-    
-    init {
-        val database = AppDatabase.getDatabase(application)
-        authRepository = AuthRepository(database.userDao(), application)
-    }
     
     fun login(username: String, password: String) {
         viewModelScope.launch {
             _isLoading.value = true
             try {
                 val result = authRepository.login(username, password)
-                _loginResult.value = result
+                result.onSuccess {
+                    _loginResult.value = true
+                }.onFailure { exception ->
+                    _loginResult.value = false
+                    _errorMessage.value = exception.message ?: "Login failed"
+                }
             } catch (e: Exception) {
-                _loginResult.value = Result.failure(e)
+                _loginResult.value = false
+                _errorMessage.value = e.message ?: "Login failed"
             } finally {
                 _isLoading.value = false
             }
@@ -47,9 +55,15 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             _isLoading.value = true
             try {
                 val result = authRepository.register(username, email, password)
-                _registerResult.value = result
+                result.onSuccess {
+                    _registerResult.value = true
+                }.onFailure { exception ->
+                    _registerResult.value = false
+                    _errorMessage.value = exception.message ?: "Registration failed"
+                }
             } catch (e: Exception) {
-                _registerResult.value = Result.failure(e)
+                _registerResult.value = false
+                _errorMessage.value = e.message ?: "Registration failed"
             } finally {
                 _isLoading.value = false
             }
@@ -70,22 +84,22 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     
     fun validateLoginInput(username: String, password: String): String? {
         return when {
-            username.isBlank() -> "Username tidak boleh kosong"
-            password.isBlank() -> "Password tidak boleh kosong"
-            password.length < 6 -> "Password minimal 6 karakter"
+            username.isBlank() -> getApplication<Application>().getString(R.string.username_empty)
+            password.isBlank() -> getApplication<Application>().getString(R.string.password_empty)
+            password.length < 6 -> getApplication<Application>().getString(R.string.password_min_length)
             else -> null
         }
     }
     
     fun validateRegisterInput(username: String, email: String, password: String, confirmPassword: String): String? {
         return when {
-            username.isBlank() -> "Username tidak boleh kosong"
-            username.length < 3 -> "Username minimal 3 karakter"
-            email.isBlank() -> "Email tidak boleh kosong"
-            !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() -> "Format email tidak valid"
-            password.isBlank() -> "Password tidak boleh kosong"
-            password.length < 6 -> "Password minimal 6 karakter"
-            password != confirmPassword -> "Konfirmasi password tidak cocok"
+            username.isBlank() -> getApplication<Application>().getString(R.string.username_empty)
+            username.length < 3 -> getApplication<Application>().getString(R.string.username_min_length)
+            email.isBlank() -> getApplication<Application>().getString(R.string.email_empty)
+            !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() -> getApplication<Application>().getString(R.string.email_invalid)
+            password.isBlank() -> getApplication<Application>().getString(R.string.password_empty)
+            password.length < 6 -> getApplication<Application>().getString(R.string.password_min_length)
+            password != confirmPassword -> getApplication<Application>().getString(R.string.password_mismatch)
             else -> null
         }
     }

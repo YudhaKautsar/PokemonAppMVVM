@@ -6,8 +6,11 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.yudha.pokemonapp.R
 import com.yudha.pokemonapp.databinding.ActivityRegisterBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class RegisterActivity : AppCompatActivity() {
     
     private lateinit var binding: ActivityRegisterBinding
@@ -33,12 +36,16 @@ class RegisterActivity : AppCompatActivity() {
     }
     
     private fun observeViewModel() {
-        authViewModel.registerResult.observe(this) { result ->
-            result.onSuccess { user ->
-                Toast.makeText(this, "Registrasi berhasil! Silakan login dengan akun Anda", Toast.LENGTH_LONG).show()
+        authViewModel.registerResult.observe(this) { success ->
+            if (success) {
+                Toast.makeText(this, getString(R.string.register_success), Toast.LENGTH_LONG).show()
                 finish() // Go back to LoginActivity
-            }.onFailure { exception ->
-                Toast.makeText(this, exception.message ?: "Registrasi gagal", Toast.LENGTH_SHORT).show()
+            }
+        }
+        
+        authViewModel.errorMessage.observe(this) { errorMessage ->
+            if (errorMessage.isNotEmpty()) {
+                Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
             }
         }
         
@@ -64,10 +71,10 @@ class RegisterActivity : AppCompatActivity() {
         val validationError = authViewModel.validateRegisterInput(username, email, password, confirmPassword)
         if (validationError != null) {
             when {
-                validationError.contains("Username") -> binding.tilUsername.error = validationError
-                validationError.contains("Email") -> binding.tilEmail.error = validationError
-                validationError.contains("Password") && !validationError.contains("Konfirmasi") -> binding.tilPassword.error = validationError
-                validationError.contains("Konfirmasi") -> binding.tilConfirmPassword.error = validationError
+                validationError.contains(getString(R.string.username)) -> binding.tilUsername.error = validationError
+            validationError.contains(getString(R.string.email)) -> binding.tilEmail.error = validationError
+            validationError.contains(getString(R.string.password)) && !validationError.contains("Konfirmasi") -> binding.tilPassword.error = validationError
+            validationError.contains("Konfirmasi") -> binding.tilConfirmPassword.error = validationError
                 else -> Toast.makeText(this, validationError, Toast.LENGTH_SHORT).show()
             }
             return

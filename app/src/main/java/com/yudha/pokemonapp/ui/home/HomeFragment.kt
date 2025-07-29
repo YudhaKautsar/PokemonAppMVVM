@@ -76,13 +76,17 @@ class HomeFragment : Fragment() {
     private fun setupSearchView() {
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                query?.let { viewModel.searchPokemon(it) }
+                query?.let {
+                    if (it.isNotEmpty()) {
+                        viewModel.searchPokemon(it)
+                    }
+                }
                 return true
             }
-            
+
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText.isNullOrEmpty()) {
-                    viewModel.searchPokemon("")
+                    viewModel.loadPokemonList()
                 }
                 return true
             }

@@ -75,9 +75,9 @@ class PokemonDetailActivity : AppCompatActivity() {
                     // Set basic info
                     binding.apply {
                         textPokemonName.text = pokemon.name.replaceFirstChar { it.uppercase() }
-                        textPokemonId.text = "#${pokemon.id.toString().padStart(3, '0')}"
-                        textHeight.text = "${pokemon.height / 10.0} m"
-                        textWeight.text = "${pokemon.weight / 10.0} kg"
+                        textPokemonId.text = getString(R.string.pokemon_id_format, pokemon.id.toString().padStart(3, '0'))
+        textHeight.text = getString(R.string.height_format, String.format("%.1f", pokemon.height / 10.0))
+        textWeight.text = getString(R.string.weight_format, String.format("%.1f", pokemon.weight / 10.0))
                         
                         pokemon.baseExperience?.let {
                             textBaseExperience.text = it.toString()
@@ -103,7 +103,7 @@ class PokemonDetailActivity : AppCompatActivity() {
                 }
                 is Result.Error -> {
                     showLoading(false)
-                    Toast.makeText(this, "Error: ${result.exception.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, getString(R.string.error_format, result.exception.message), Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -117,7 +117,7 @@ class PokemonDetailActivity : AppCompatActivity() {
             pokemonId != -1 -> viewModel.loadPokemonDetail(pokemonId)
             !pokemonName.isNullOrEmpty() -> viewModel.loadPokemonDetailByName(pokemonName)
             else -> {
-                Toast.makeText(this, "Invalid Pokemon data", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.invalid_pokemon_data), Toast.LENGTH_SHORT).show()
                 finish()
             }
         }

@@ -16,21 +16,23 @@ import androidx.core.content.ContextCompat
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.yudha.pokemonapp.R
 import com.yudha.pokemonapp.databinding.FragmentProfileBinding
 import com.yudha.pokemonapp.ui.auth.LoginActivity
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 
+@AndroidEntryPoint
 class ProfileFragment : Fragment() {
     
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
     
-    private lateinit var viewModel: ProfileViewModel
+    private val viewModel: ProfileViewModel by viewModels()
     private var selectedImageUri: Uri? = null
     private var photoUri: Uri? = null
     
@@ -65,7 +67,7 @@ class ProfileFragment : Fragment() {
         if (readPermission && cameraPermission) {
             showImageSourceDialog()
         } else {
-            Toast.makeText(context, "Permissions required for camera and gallery access", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, getString(R.string.permissions_required), Toast.LENGTH_SHORT).show()
         }
     }
     
@@ -80,7 +82,6 @@ class ProfileFragment : Fragment() {
     
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupViewModel()
         setupUI()
         observeViewModel()
         loadInitialProfileImage()
@@ -95,12 +96,7 @@ class ProfileFragment : Fragment() {
         }
     }
     
-    private fun setupViewModel() {
-        viewModel = ViewModelProvider(
-            this,
-            ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application)
-        )[ProfileViewModel::class.java]
-    }
+
     
     private fun setupUI() {
         binding.btnChangePhoto.setOnClickListener {
@@ -150,7 +146,7 @@ class ProfileFragment : Fragment() {
         
         viewModel.updateSuccess.observe(viewLifecycleOwner) { success ->
             if (success) {
-                Toast.makeText(context, "Profile updated successfully", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.profile_updated_successfully), Toast.LENGTH_SHORT).show()
                 // Reset selectedImageUri after successful save
                 selectedImageUri = null
                 viewModel.clearUpdateSuccess()
@@ -186,8 +182,8 @@ class ProfileFragment : Fragment() {
     
     private fun showImageSourceDialog() {
         AlertDialog.Builder(requireContext())
-            .setTitle("Select Image Source")
-            .setItems(arrayOf("Camera", "Gallery")) { _, which ->
+            .setTitle(getString(R.string.select_image_source))
+            .setItems(arrayOf(getString(R.string.camera), getString(R.string.gallery))) { _, which ->
                 when (which) {
                     0 -> openCamera()
                     1 -> openImagePicker()
@@ -274,9 +270,9 @@ class ProfileFragment : Fragment() {
     
     private fun logout() {
         AlertDialog.Builder(requireContext())
-            .setTitle("Logout")
-            .setMessage("Are you sure you want to logout?")
-            .setPositiveButton("Yes") { _, _ ->
+            .setTitle(getString(R.string.logout_title))
+            .setMessage(getString(R.string.logout_message))
+            .setPositiveButton(getString(R.string.yes)) { _, _ ->
                 viewModel.logout()
                 
                 // Navigate to LoginActivity
@@ -285,7 +281,7 @@ class ProfileFragment : Fragment() {
                 startActivity(intent)
                 requireActivity().finish()
             }
-            .setNegativeButton("No", null)
+            .setNegativeButton(getString(R.string.no), null)
             .show()
     }
     

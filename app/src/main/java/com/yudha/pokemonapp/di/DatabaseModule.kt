@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.yudha.pokemonapp.data.dao.PokemonDao
 import com.yudha.pokemonapp.data.database.AppDatabase
+import com.yudha.pokemonapp.data.dao.UserDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,5 +25,10 @@ object DatabaseModule {
     @Provides
     fun providePokemonDao(database: AppDatabase): PokemonDao {
         return database.pokemonDao()
+    }
+    
+    @Provides
+    fun provideUserDao(database: AppDatabase): UserDao {
+        return database.userDao()
     }
 }

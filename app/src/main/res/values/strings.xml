@@ -37,6 +37,7 @@
     <string name="login_success">Login berhasil! Selamat datang %s</string>
     <string name="register_success">Registrasi berhasil! Silakan login dengan akun Anda</string>
     <string name="profile_updated">Profile updated successfully</string>
+    <string name="profile_updated_successfully">Profile updated successfully</string>
     
     <!-- Error Messages -->
     <string name="login_error">Login gagal</string>
@@ -47,7 +48,7 @@
     <string name="failed_load_pokemon">Failed to load Pokemon detail: %s</string>
     <string name="unknown_error">Unknown error occurred</string>
     <string name="empty_response">Empty response</string>
-    <string name="error_format">Error: %d %s</string>
+    <string name="error_format">Error: %s</string>
     <string name="invalid_pokemon_data">Invalid Pokemon data</string>
     <string name="permissions_required">Permissions required for camera and gallery access</string>
     
@@ -66,8 +67,8 @@
     
     <!-- Pokemon Detail -->
     <string name="pokemon_id_format">#%s</string>
-    <string name="height_format">%.1f m</string>
-    <string name="weight_format">%.1f kg</string>
+    <string name="height_format">%s m</string>
+    <string name="weight_format">%s kg</string>
     <string name="ability_slot_format">Slot %d</string>
     <string name="hidden_ability">Hidden Ability</string>
     <string name="normal_ability">Normal Ability</string>
@@ -97,7 +98,29 @@
     <string name="pokemon_api_url">https://pokeapi.co/api/v2/pokemon/%d/</string>
     
     <!-- File Provider -->
-    <string name="file_provider_authority">%s.fileprovider</string>
+    <string name="file_provider_authority">com.yudha.pokemonapp.fileprovider</string>
     <string name="temp_photo_name">temp_photo_%d.jpg</string>
     <string name="profile_photo_name">profile_%d.jpg</string>
+    
+    <!-- Layout Strings -->
+    <string name="search_hint">Search Pokemon...</string>
+    <string name="app_name_display">Pokemon App</string>
+    <string name="login_title">Masuk</string>
+    <string name="full_name_label">Full Name</string>
+    <string name="phone_number_label">Phone Number</string>
+    <string name="enter_full_name">Enter your full name</string>
+    <string name="enter_phone_number">Enter your phone number</string>
+    <string name="logout_button">Logout</string>
+    <string name="stripe">-</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="pokemon_logo">Pokemon Logo</string>
+    <string name="pokemon_app">POKEMON APP</string>
+    <string name="gotta_catch_em_all">Gotta Catch \'Em All!</string>
+    <string name="loading">Loading...</string>
+    <string name="masuk_di_sini">Masuk di sini</string>
+    <string name="sudah_punya_akun">Sudah punya akun?</string>
+    <string name="buat_akun_baru">Buat akun baru</string>
+    <string name="daftar">Daftar</string>
+    <string name="konfirmasi_password">Konfirmasi Password</string>
+    <string name="image_of_pokemon">Image of Pokemon</string>
 </resources>
