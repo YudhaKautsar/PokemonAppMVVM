@@ -1,17 +1,18 @@
 package com.yudha.pokemonapp.ui.home
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yudha.pokemonapp.data.model.PokemonResult
 import com.yudha.pokemonapp.data.repository.PokemonRepository
 import com.yudha.pokemonapp.util.Result
 import kotlinx.coroutines.launch
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(application: Application) : AndroidViewModel(application) {
     
-    private val pokemonRepository = PokemonRepository()
+    private val pokemonRepository = PokemonRepository(application)
     
     private val _pokemonList = MutableLiveData<List<PokemonResult>>()
     val pokemonList: LiveData<List<PokemonResult>> = _pokemonList
@@ -53,7 +54,7 @@ class HomeViewModel : ViewModel() {
             val result = if (currentQuery.isEmpty()) {
                 pokemonRepository.getPokemonList(limit, currentOffset)
             } else {
-                pokemonRepository.searchPokemon(currentQuery, limit, currentOffset)
+                pokemonRepository.searchPokemon(currentQuery)
             }
             
             when (result) {
@@ -95,7 +96,7 @@ class HomeViewModel : ViewModel() {
         viewModelScope.launch {
             _isLoading.value = true
             
-            val result = pokemonRepository.searchPokemon(query, limit, 0)
+            val result = pokemonRepository.searchPokemon(query)
             
             when (result) {
                 is Result.Success -> {

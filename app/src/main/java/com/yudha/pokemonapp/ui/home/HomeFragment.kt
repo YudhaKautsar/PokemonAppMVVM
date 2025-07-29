@@ -38,7 +38,10 @@ class HomeFragment : Fragment() {
     }
     
     private fun setupViewModel() {
-        viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+        viewModel = ViewModelProvider(
+            this,
+            ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application)
+        )[HomeViewModel::class.java]
     }
     
     private fun setupRecyclerView() {
