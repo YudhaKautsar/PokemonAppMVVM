@@ -13,7 +13,7 @@ import com.yudha.pokemonapp.data.local.entity.PokemonEntity
 
 @Database(
     entities = [User::class, PokemonEntity::class],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -38,6 +38,14 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
         
+        private val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE users ADD COLUMN profileImagePath TEXT")
+                database.execSQL("ALTER TABLE users ADD COLUMN fullName TEXT")
+                database.execSQL("ALTER TABLE users ADD COLUMN phoneNumber TEXT")
+            }
+        }
+        
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -45,7 +53,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "pokemon_app_database"
                 )
-                .addMigrations(MIGRATION_1_2)
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                 .build()
                 INSTANCE = instance
                 instance

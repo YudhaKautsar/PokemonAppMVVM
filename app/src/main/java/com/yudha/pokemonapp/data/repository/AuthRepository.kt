@@ -5,9 +5,15 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import com.yudha.pokemonapp.data.dao.UserDao
 import com.yudha.pokemonapp.data.entity.User
+import com.yudha.pokemonapp.data.local.UserPreferences
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.security.MessageDigest
 
 class AuthRepository(private val userDao: UserDao, private val context: Context) {
+    
+    private val userPreferences = UserPreferences(context)
     
     private val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
     
@@ -75,6 +81,11 @@ class AuthRepository(private val userDao: UserDao, private val context: Context)
             .putString("email", user.email)
             .putBoolean("is_logged_in", true)
             .apply()
+            
+        // Also save to UserPreferences for ProfileFragment
+        CoroutineScope(Dispatchers.IO).launch {
+            userPreferences.saveUserId(user.id)
+        }
     }
     
     fun isLoggedIn(): Boolean {

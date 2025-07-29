@@ -96,11 +96,16 @@ class HomeFragment : Fragment() {
         }
         
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            // Hanya tampilkan progress bar utama jika list kosong
+            val showMainProgress = isLoading && (viewModel.pokemonList.value?.isEmpty() == true)
+            binding.progressBar.visibility = if (showMainProgress) View.VISIBLE else View.GONE
         }
         
         viewModel.isLoadingMore.observe(viewLifecycleOwner) { isLoadingMore ->
-            binding.progressBarLoadMore.visibility = if (isLoadingMore) View.VISIBLE else View.GONE
+            // Gunakan footer loading di adapter
+            pokemonAdapter.setLoading(isLoadingMore)
+            // Sembunyikan progress bar terpisah
+            binding.progressBarLoadMore.visibility = View.GONE
         }
         
         viewModel.errorMessage.observe(viewLifecycleOwner) { errorMessage ->

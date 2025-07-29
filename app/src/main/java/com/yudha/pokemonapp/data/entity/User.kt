@@ -10,5 +10,8 @@ data class User(
     val username: String,
     val email: String,
     val password: String,
+    val profileImagePath: String? = null,
+    val fullName: String? = null,
+    val phoneNumber: String? = null,
     val createdAt: Long = System.currentTimeMillis()
 )

@@ -3,6 +3,7 @@ package com.yudha.pokemonapp.data.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.yudha.pokemonapp.data.entity.User
 
 @Dao
@@ -25,4 +26,10 @@ interface UserDao {
     
     @Query("SELECT COUNT(*) FROM users WHERE email = :email")
     suspend fun isEmailExists(email: String): Int
+    
+    @Update
+    suspend fun updateUser(user: User)
+    
+    @Query("SELECT * FROM users WHERE id = :userId LIMIT 1")
+    suspend fun getUserById(userId: Long): User?
 }

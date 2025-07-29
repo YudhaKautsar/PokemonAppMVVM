@@ -1,0 +1,103 @@
+package com.yudha.pokemonapp.ui.profile
+
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import com.yudha.pokemonapp.data.entity.User
+import com.yudha.pokemonapp.data.database.AppDatabase
+import com.yudha.pokemonapp.data.local.UserPreferences
+import com.yudha.pokemonapp.data.repository.AuthRepository
+import kotlinx.coroutines.launch
+
+class ProfileViewModel(application: Application) : AndroidViewModel(application) {
+    
+    private val database = AppDatabase.getDatabase(application)
+    private val userDao = database.userDao()
+    private val userPreferences = UserPreferences(application)
+    private val authRepository = AuthRepository(userDao, application)
+    
+    private val _user = MutableLiveData<User?>()
+    val user: LiveData<User?> = _user
+    
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+    
+    private val _errorMessage = MutableLiveData<String?>()
+    val errorMessage: LiveData<String?> = _errorMessage
+    
+    private val _updateSuccess = MutableLiveData<Boolean>()
+    val updateSuccess: LiveData<Boolean> = _updateSuccess
+    
+    init {
+        loadUserProfile()
+    }
+    
+    private fun loadUserProfile() {
+        viewModelScope.launch {
+            try {
+                _isLoading.value = true
+                val userId = userPreferences.getUserId()
+                if (userId != -1L) {
+                    val user = userDao.getUserById(userId)
+                    _user.value = user
+                } else {
+                    _errorMessage.value = "User not found"
+                }
+            } catch (e: Exception) {
+                _errorMessage.value = "Failed to load profile: ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+    
+    fun updateUserProfile(
+        fullName: String?,
+        phoneNumber: String?,
+        profileImagePath: String?
+    ) {
+        viewModelScope.launch {
+            try {
+                _isLoading.value = true
+                val currentUser = _user.value
+                if (currentUser != null) {
+                    val updatedUser = currentUser.copy(
+                        fullName = fullName,
+                        phoneNumber = phoneNumber,
+                        profileImagePath = profileImagePath
+                    )
+                    userDao.updateUser(updatedUser)
+                    _user.value = updatedUser
+                    _updateSuccess.value = true
+                } else {
+                    _errorMessage.value = "User not found"
+                }
+            } catch (e: Exception) {
+                _errorMessage.value = "Failed to update profile: ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+    
+    fun logout() {
+        viewModelScope.launch {
+            try {
+                userPreferences.clear()
+                authRepository.logout()
+            } catch (e: Exception) {
+                // Handle error if needed
+            }
+        }
+    }
+    
+    fun clearError() {
+        _errorMessage.value = null
+    }
+    
+    fun clearUpdateSuccess() {
+        _updateSuccess.value = false
+    }
+}

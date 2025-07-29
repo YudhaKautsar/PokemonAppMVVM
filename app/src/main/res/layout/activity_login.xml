@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="48dp"
             android:text="Pokemon App"
-            android:textColor="@color/design_default_color_primary"
+            android:textColor="@color/design_default_color_primary_more_dark"
             android:textSize="32sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -62,6 +62,7 @@
                     android:text="Masuk"
                     android:textSize="24sp"
                     android:textStyle="bold"
+                    android:textColor="@color/black"
                     android:layout_marginBottom="24dp" />
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -106,6 +107,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:text="Masuk"
+                    android:backgroundTint="@color/design_default_color_primary_more_dark"
                     android:textSize="16sp"
                     app:cornerRadius="8dp" />
 
@@ -134,7 +136,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Daftar di sini"
-                android:textColor="@color/design_default_color_primary"
+                android:textColor="@color/design_default_color_primary_more_dark"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:clickable="true"

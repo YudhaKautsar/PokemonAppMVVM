@@ -9,8 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.yudha.pokemonapp.R
-import com.yudha.pokemonapp.data.repository.AuthRepository
 import com.yudha.pokemonapp.data.database.AppDatabase
+import com.yudha.pokemonapp.data.repository.AuthRepository
 import com.yudha.pokemonapp.ui.auth.LoginActivity
 import com.yudha.pokemonapp.ui.home.HomeFragment
 import com.yudha.pokemonapp.ui.profile.ProfileFragment
@@ -22,11 +22,20 @@ class MainActivity : AppCompatActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
         
         val database = AppDatabase.getDatabase(this)
         authRepository = AuthRepository(database.userDao(), this)
         
+        // Check if user is logged in
+        if (!authRepository.isLoggedIn()) {
+            val intent = Intent(this, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            finish()
+            return
+        }
+        
+        setContentView(R.layout.activity_main)
         setupBottomNavigation()
         
         // Load default fragment
