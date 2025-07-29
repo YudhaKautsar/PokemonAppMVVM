@@ -6,32 +6,31 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.asLiveData
-import com.yudha.pokemonapp.data.local.UserPreferences
+
+import com.yudha.pokemonapp.data.repository.AuthRepository
+import com.yudha.pokemonapp.data.database.AppDatabase
 import com.yudha.pokemonapp.ui.main.MainActivity
-import com.yudha.pokemonapp.ui.login.LoginActivity
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import com.yudha.pokemonapp.ui.auth.LoginActivity
+
 
 @SuppressLint("CustomSplashScreen")
-@AndroidEntryPoint
 class SplashActivity : AppCompatActivity() {
 
-    @Inject
-    lateinit var userPreferences: UserPreferences
+    private lateinit var authRepository: AuthRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        val database = AppDatabase.getDatabase(this)
+        authRepository = AuthRepository(database.userDao(), this)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            userPreferences.authToken.asLiveData().observe(this) { token ->
-                if (token.isNullOrEmpty()) {
-                    startActivity(Intent(this, LoginActivity::class.java))
-                } else {
-                    startActivity(Intent(this, MainActivity::class.java))
-                }
-                finish()
+            if (authRepository.isLoggedIn()) {
+                startActivity(Intent(this, MainActivity::class.java))
+            } else {
+                startActivity(Intent(this, LoginActivity::class.java))
             }
+            finish()
         }, 2000) // 2 seconds delay
     }
 }

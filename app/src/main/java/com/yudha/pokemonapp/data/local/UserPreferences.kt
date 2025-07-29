@@ -20,14 +20,14 @@ class UserPreferences(private val context: Context) {
     }
 
     suspend fun saveAuthToken(token: String) {
-        context.dataStore.edit {
-            it[authTokenKey] = token
+        context.dataStore.edit { preferences ->
+            preferences[authTokenKey] = token
         }
     }
 
-    suspend fun clear()
-        context.dataStore.edit {
-            it.clear()
+    suspend fun clear() {
+        context.dataStore.edit { preferences ->
+            preferences.clear()
         }
     }
 }
