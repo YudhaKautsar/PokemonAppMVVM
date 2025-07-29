@@ -2,12 +2,13 @@ package com.yudha.pokemonapp.ui.auth
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import com.yudha.pokemonapp.R
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.yudha.pokemonapp.R
-import com.yudha.pokemonapp.data.repository.AuthRepository
-import com.yudha.pokemonapp.data.entity.User
+import com.yudha.pokemonapp.domain.usecase.auth.LoginUseCase
+import com.yudha.pokemonapp.domain.usecase.auth.LogoutUseCase
+import com.yudha.pokemonapp.domain.usecase.auth.RegisterUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,7 +16,9 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     application: Application,
-    private val authRepository: AuthRepository
+    private val loginUseCase: LoginUseCase,
+    private val registerUseCase: RegisterUseCase,
+    private val logoutUseCase: LogoutUseCase
 ) : AndroidViewModel(application) {
     
     private val _loginResult = MutableLiveData<Boolean>()
@@ -34,7 +37,7 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                val result = authRepository.login(username, password)
+                val result = loginUseCase(username, password)
                 result.onSuccess {
                     _loginResult.value = true
                 }.onFailure { exception ->
@@ -50,11 +53,11 @@ class AuthViewModel @Inject constructor(
         }
     }
     
-    fun register(username: String, email: String, password: String) {
+    fun register(username: String, email: String, password: String, confirmPassword: String) {
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                val result = authRepository.register(username, email, password)
+                val result = registerUseCase(username, email, password, confirmPassword)
                 result.onSuccess {
                     _registerResult.value = true
                 }.onFailure { exception ->
@@ -70,16 +73,16 @@ class AuthViewModel @Inject constructor(
         }
     }
     
-    fun isLoggedIn(): Boolean {
-        return authRepository.isLoggedIn()
-    }
-    
-    fun getCurrentUser(): User? {
-        return authRepository.getCurrentUser()
-    }
-    
     fun logout() {
-        authRepository.logout()
+        viewModelScope.launch {
+            logoutUseCase()
+        }
+    }
+    
+    fun isLoggedIn(): Boolean {
+        // TODO: Implement proper login state check
+        // This could check shared preferences, token validity, etc.
+        return false
     }
     
     fun validateLoginInput(username: String, password: String): String? {

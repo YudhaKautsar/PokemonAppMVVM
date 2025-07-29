@@ -11,6 +11,8 @@ import com.bumptech.glide.Glide
 import com.yudha.pokemonapp.R
 import com.yudha.pokemonapp.databinding.ActivityPokemonDetailBinding
 import com.yudha.pokemonapp.util.Result
+import com.yudha.pokemonapp.data.model.TypeInfo
+import com.yudha.pokemonapp.data.model.AbilityInfo
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -63,48 +65,65 @@ class PokemonDetailActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        viewModel.pokemonDetail.observe(this) { result ->
-            when (result) {
-                is Result.Loading -> {
-                    showLoading(true)
-                }
-                is Result.Success -> {
-                    showLoading(false)
-                    val pokemon = result.data
+        viewModel.pokemon.observe(this) { pokemon ->
+            pokemon?.let {
+                // Set basic info
+                binding.apply {
+                    textPokemonName.text = it.name.value.replaceFirstChar { char -> char.uppercase() }
+                    textPokemonId.text = getString(R.string.pokemon_id_format, it.id.value.toString().padStart(3, '0'))
+                    textHeight.text = getString(R.string.height_format, String.format("%.1f", it.physicalAttributes.height / 10.0))
+                    textWeight.text = getString(R.string.weight_format, String.format("%.1f", it.physicalAttributes.weight / 10.0))
                     
-                    // Set basic info
-                    binding.apply {
-                        textPokemonName.text = pokemon.name.replaceFirstChar { it.uppercase() }
-                        textPokemonId.text = getString(R.string.pokemon_id_format, pokemon.id.toString().padStart(3, '0'))
-        textHeight.text = getString(R.string.height_format, String.format("%.1f", pokemon.height / 10.0))
-        textWeight.text = getString(R.string.weight_format, String.format("%.1f", pokemon.weight / 10.0))
-                        
-                        pokemon.baseExperience?.let {
-                            textBaseExperience.text = it.toString()
-                        }
-                        
-                        // Load image
-                        val imageUrl = pokemon.sprites.other?.officialArtwork?.frontDefault
-                            ?: pokemon.sprites.frontDefault
-                            ?: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png"
-                        
-                        Glide.with(this@PokemonDetailActivity)
-                            .load(imageUrl)
-                            .placeholder(R.drawable.pokemon_logo)
-                            .error(R.drawable.pokemon_logo)
-                            .into(imagePokemon)
+                    it.physicalAttributes.baseExperience?.let { exp ->
+                        textBaseExperience.text = exp.toString()
                     }
                     
-                    // Set abilities
-                    abilitiesAdapter.submitList(pokemon.abilities)
-                    
+                    // Load image
+                    val imageUrl = it.sprites.frontDefault
+                        ?: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${it.id.value}.png"
+                        
+                    Glide.with(this@PokemonDetailActivity)
+                        .load(imageUrl)
+                        .placeholder(R.drawable.pokemon_logo)
+                        .error(R.drawable.pokemon_logo)
+                        .into(imagePokemon)
+                        
                     // Set types
-                    typesAdapter.submitList(pokemon.types)
+                    val typesList = it.types.map { type ->
+                        com.yudha.pokemonapp.data.model.PokemonType(
+                            slot = type.slot,
+                            type = TypeInfo(
+                                name = type.name.value,
+                                url = ""
+                            )
+                        )
+                    }
+                    typesAdapter.submitList(typesList)
+                        
+                    // Set abilities
+                    val abilitiesList = it.abilities.map { ability ->
+                        com.yudha.pokemonapp.data.model.PokemonAbility(
+                            isHidden = ability.isHidden,
+                            slot = ability.slot,
+                            ability = AbilityInfo(
+                                name = ability.name.value,
+                                url = ""
+                            )
+                        )
+                    }
+                    abilitiesAdapter.submitList(abilitiesList)
                 }
-                is Result.Error -> {
-                    showLoading(false)
-                    Toast.makeText(this, getString(R.string.error_format, result.exception.message), Toast.LENGTH_LONG).show()
-                }
+            }
+        }
+        
+        viewModel.isLoading.observe(this) { isLoading ->
+            showLoading(isLoading)
+        }
+        
+        viewModel.errorMessage.observe(this) { errorMessage ->
+            errorMessage?.let {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+                viewModel.clearError()
             }
         }
     }
@@ -114,8 +133,8 @@ class PokemonDetailActivity : AppCompatActivity() {
         val pokemonName = intent.getStringExtra(EXTRA_POKEMON_NAME)
         
         when {
-            pokemonId != -1 -> viewModel.loadPokemonDetail(pokemonId)
-            !pokemonName.isNullOrEmpty() -> viewModel.loadPokemonDetailByName(pokemonName)
+            pokemonId != -1 -> viewModel.loadPokemonDetailById(pokemonId)
+            !pokemonName.isNullOrEmpty() -> viewModel.loadPokemonDetail(pokemonName)
             else -> {
                 Toast.makeText(this, getString(R.string.invalid_pokemon_data), Toast.LENGTH_SHORT).show()
                 finish()

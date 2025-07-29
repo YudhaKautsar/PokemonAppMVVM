@@ -4,20 +4,21 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.yudha.pokemonapp.data.model.PokemonResult
-import com.yudha.pokemonapp.data.repository.PokemonRepository
-import com.yudha.pokemonapp.util.Result
+import com.yudha.pokemonapp.domain.entity.Pokemon
+import com.yudha.pokemonapp.domain.usecase.pokemon.GetPokemonListUseCase
+import com.yudha.pokemonapp.domain.usecase.pokemon.SearchPokemonUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val pokemonRepository: PokemonRepository
+    private val getPokemonListUseCase: GetPokemonListUseCase,
+    private val searchPokemonUseCase: SearchPokemonUseCase
 ) : ViewModel() {
     
-    private val _pokemonList = MutableLiveData<List<PokemonResult>>()
-    val pokemonList: LiveData<List<PokemonResult>> = _pokemonList
+    private val _pokemonList = MutableLiveData<List<Pokemon>>()
+    val pokemonList: LiveData<List<Pokemon>> = _pokemonList
     
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
@@ -31,7 +32,6 @@ class HomeViewModel @Inject constructor(
     private var currentOffset = 0
     private val limit = 10
     private var isLastPage = false
-    private var currentQuery = ""
     
     init {
         loadPokemonList()
@@ -53,69 +53,33 @@ class HomeViewModel @Inject constructor(
                 _isLoadingMore.value = true
             }
             
-            val result = if (currentQuery.isEmpty()) {
-                pokemonRepository.getPokemonList(limit, currentOffset)
-            } else {
-                pokemonRepository.searchPokemon(currentQuery)
-            }
-            
-            when (result) {
-                is Result.Success -> {
-                    val newPokemon = result.data.results
+            try {
+                val result = getPokemonListUseCase(limit, currentOffset)
+                result.onSuccess { pokemonList ->
                     val currentList = _pokemonList.value ?: emptyList()
                     
                     if (refresh || currentOffset == 0) {
-                        _pokemonList.value = newPokemon
+                        _pokemonList.value = pokemonList
                     } else {
-                        _pokemonList.value = currentList + newPokemon
+                        _pokemonList.value = currentList + pokemonList
                     }
                     
                     currentOffset += limit
-                    isLastPage = newPokemon.size < limit
+                    isLastPage = pokemonList.size < limit
                     _errorMessage.value = null
+                }.onFailure { exception ->
+                    _errorMessage.value = exception.message ?: "Failed to load Pokemon"
                 }
-                is Result.Error -> {
-                    _errorMessage.value = result.exception.message ?: "Unknown error occurred"
-                }
+            } catch (e: Exception) {
+                _errorMessage.value = e.message ?: "Failed to load Pokemon"
+            } finally {
+                _isLoading.value = false
+                _isLoadingMore.value = false
             }
-            
-            _isLoading.value = false
-            _isLoadingMore.value = false
         }
     }
     
-    fun searchPokemon(query: String) {
-        currentQuery = query
-        currentOffset = 0
-        isLastPage = false
-        _pokemonList.value = emptyList()
-        
-        if (query.isEmpty()) {
-            loadPokemonList(refresh = true)
-            return
-        }
-        
-        viewModelScope.launch {
-            _isLoading.value = true
-            
-            val result = pokemonRepository.searchPokemon(query)
-            
-            when (result) {
-                is Result.Success -> {
-                    _pokemonList.value = result.data.results
-                    currentOffset = limit
-                    isLastPage = result.data.results.size < limit
-                    _errorMessage.value = null
-                }
-                is Result.Error -> {
-                    _errorMessage.value = result.exception.message ?: "Unknown error occurred"
-                    _pokemonList.value = emptyList()
-                }
-            }
-            
-            _isLoading.value = false
-        }
-    }
+
     
     fun loadMorePokemon() {
         if (!_isLoadingMore.value!! && !isLastPage) {
@@ -125,5 +89,25 @@ class HomeViewModel @Inject constructor(
     
     fun clearError() {
         _errorMessage.value = null
+    }
+    
+    fun searchPokemon(query: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _errorMessage.value = null
+            
+            try {
+                val result = searchPokemonUseCase(query)
+                result.onSuccess { pokemonList ->
+                    _pokemonList.value = pokemonList
+                }.onFailure { exception ->
+                    _errorMessage.value = exception.message ?: "Search failed"
+                }
+            } catch (e: Exception) {
+                _errorMessage.value = e.message ?: "Search failed"
+            } finally {
+                _isLoading.value = false
+            }
+        }
     }
 }

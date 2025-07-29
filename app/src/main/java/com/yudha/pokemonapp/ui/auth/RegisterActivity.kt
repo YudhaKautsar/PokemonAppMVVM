@@ -81,6 +81,6 @@ class RegisterActivity : AppCompatActivity() {
         }
         
         // Perform registration
-        authViewModel.register(username, email, password)
+        authViewModel.register(username, email, password, confirmPassword)
     }
 }

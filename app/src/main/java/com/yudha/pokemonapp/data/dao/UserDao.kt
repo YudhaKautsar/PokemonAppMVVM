@@ -32,4 +32,7 @@ interface UserDao {
     
     @Query("SELECT * FROM users WHERE id = :userId LIMIT 1")
     suspend fun getUserById(userId: Long): User?
+    
+    @Query("DELETE FROM users WHERE id = :userId")
+    suspend fun deleteUser(userId: Long): Int
 }

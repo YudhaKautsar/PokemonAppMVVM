@@ -8,12 +8,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.yudha.pokemonapp.R
-import com.yudha.pokemonapp.data.model.PokemonResult
+import com.yudha.pokemonapp.domain.entity.Pokemon
 import com.yudha.pokemonapp.databinding.ItemPokemonBinding
 import com.yudha.pokemonapp.databinding.ItemLoadingFooterBinding
 
 class PokemonAdapter(
-    private val onItemClick: (PokemonResult) -> Unit
+    private val onItemClick: (Pokemon) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     
     companion object {
@@ -21,10 +21,10 @@ class PokemonAdapter(
         private const val VIEW_TYPE_LOADING = 1
     }
     
-    private var pokemonList = mutableListOf<PokemonResult>()
+    private var pokemonList = mutableListOf<Pokemon>()
     private var isLoading = false
     
-    fun submitList(list: List<PokemonResult>) {
+    fun submitList(list: List<Pokemon>) {
         pokemonList.clear()
         pokemonList.addAll(list)
         notifyDataSetChanged()
@@ -96,15 +96,15 @@ class PokemonAdapter(
     inner class PokemonViewHolder(private val binding: ItemPokemonBinding) :
         RecyclerView.ViewHolder(binding.root) {
         
-        fun bind(pokemon: PokemonResult) {
+        fun bind(pokemon: Pokemon) {
             binding.apply {
-                textPokemonName.text = pokemon.name.replaceFirstChar { 
+                textPokemonName.text = pokemon.name.value.replaceFirstChar { 
                     if (it.isLowerCase()) it.titlecase() else it.toString() 
                 }
                 
-                // Extract Pokemon ID from URL
-                val pokemonId = extractPokemonId(pokemon.url)
-                val imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$pokemonId.png"
+                // Use Pokemon ID directly
+                val pokemonId = pokemon.id.value
+                val imageUrl = pokemon.sprites.frontDefault ?: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$pokemonId.png"
                 
                 Glide.with(imagePokemon.context)
                     .load(imageUrl)

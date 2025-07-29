@@ -45,7 +45,7 @@ class HomeFragment : Fragment() {
         pokemonAdapter = PokemonAdapter { pokemon ->
             // Navigate to detail screen
             val intent = Intent(requireContext(), PokemonDetailActivity::class.java)
-            intent.putExtra(PokemonDetailActivity.EXTRA_POKEMON_NAME, pokemon.name)
+            intent.putExtra(PokemonDetailActivity.EXTRA_POKEMON_NAME, pokemon.name.value)
             startActivity(intent)
         }
         
