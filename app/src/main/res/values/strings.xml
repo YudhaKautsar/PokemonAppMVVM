@@ -53,7 +53,7 @@
     <string name="permissions_required">Permissions required for camera and gallery access</string>
     
     <!-- Loading Messages -->
-    <string name="loading_more_pokemon">Loading more Pokemon...</string>
+    <string name="loading_more_pokemon">Loading more Pokemon…</string>
     
     <!-- Dialog Messages -->
     <string name="logout_title">Logout</string>
@@ -103,7 +103,7 @@
     <string name="profile_photo_name">profile_%d.jpg</string>
     
     <!-- Layout Strings -->
-    <string name="search_hint">Search Pokemon...</string>
+    <string name="search_hint">Search Pokemon…</string>
     <string name="app_name_display">Pokemon App</string>
     <string name="login_title">Masuk</string>
     <string name="full_name_label">Full Name</string>
@@ -116,7 +116,7 @@
     <string name="pokemon_logo">Pokemon Logo</string>
     <string name="pokemon_app">POKEMON APP</string>
     <string name="gotta_catch_em_all">Gotta Catch \'Em All!</string>
-    <string name="loading">Loading...</string>
+    <string name="loading">Loading…</string>
     <string name="masuk_di_sini">Masuk di sini</string>
     <string name="sudah_punya_akun">Sudah punya akun?</string>
     <string name="buat_akun_baru">Buat akun baru</string>

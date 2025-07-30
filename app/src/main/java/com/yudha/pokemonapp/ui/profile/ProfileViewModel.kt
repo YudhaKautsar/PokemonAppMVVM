@@ -85,15 +85,36 @@ class ProfileViewModel @Inject constructor(
         }
     }
     
+    private val _logoutSuccess = MutableLiveData<Boolean>()
+    val logoutSuccess: LiveData<Boolean> = _logoutSuccess
+    
     fun logout() {
         viewModelScope.launch {
             try {
+                _isLoading.value = true
+                _errorMessage.value = null
+                
+                // Clear user preferences first
                 userPreferences.clear()
+                
+                // Logout from auth repository
                 authRepository.logout()
+                
+                // Clear user data
+                _user.value = null
+                _logoutSuccess.value = true
+                
             } catch (e: Exception) {
-                // Handle error if needed
+                _errorMessage.value = "Failed to logout: ${e.message}"
+                _logoutSuccess.value = false
+            } finally {
+                _isLoading.value = false
             }
         }
+    }
+    
+    fun clearLogoutSuccess() {
+        _logoutSuccess.value = false
     }
     
     fun clearError() {
